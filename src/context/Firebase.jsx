@@ -1,8 +1,7 @@
 import React, { createContext, useContext } from 'react';
 import { initializeApp } from "firebase/app";
-import { getFirestore, orderBy, collection, query, where, getDocs } from 'firebase/firestore';
+import { getFirestore, orderBy, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
-
 const FirebaseContext = createContext(null);
 
 const firebaseConfig = {
@@ -32,6 +31,11 @@ export const FirebaseProvider = (props) => {
         return getDocs(q);
     }
 
+    const writeData = (data) => {
+        const ref = query(collection(db, "jobs"));
+        return addDoc(ref, data);
+    }
+
     // Make custom req based on query
     const searchData = (search) => {
         const ref = query(collection(db, "jobs"));
@@ -55,7 +59,7 @@ export const FirebaseProvider = (props) => {
     }
 
     return (
-        <FirebaseContext.Provider value={{ signup, login, logout, getData, searchData }}>
+        <FirebaseContext.Provider value={{ signup, login, logout, getData, searchData, writeData }}>
             {props.children}
         </FirebaseContext.Provider>
     )

@@ -6,13 +6,16 @@ import { useFirebase } from "../context/Firebase";
 import { notify } from "../utils/notify";
 import { useRecoilState } from "recoil";
 import { userAtom } from "../atoms/user";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
     const [user, setUser] = useRecoilState(userAtom);
     const [jobs, setJobs] = useState<JobType[]>(null);
     const firebase = useFirebase();
     const [isFilter, setIsFilter] = useState(false);
+    const navigate = useNavigate();
 
+    // For search query
     const [search, setSearch] = useState({
         title: "",
         location: "",
@@ -20,8 +23,9 @@ const Home = () => {
         type: ""
     });
 
-    let tempData = [];
+    // Fetch jobs from db
     const fetchData = async () => {
+        let tempData = [];
         const querySnapshot = await firebase.getData();
         querySnapshot.forEach((doc) => {
             tempData.push({ ...doc.data(), id: doc.id, posted: doc.data().posted.toDate() });
@@ -42,6 +46,8 @@ const Home = () => {
             notify("Error, try again!");
         });
     }
+    
+    // Handle change in search query
     const handleChange = (e: React.FormEvent<HTMLElement>) => {
         const form = e.target as HTMLInputElement;
         setSearch((prev) => ({
@@ -50,8 +56,9 @@ const Home = () => {
         }));
     }
 
+    // Show filtered results
     const handleSubmit = async () => {
-        tempData = [];
+        let tempData = [];
         setIsFilter(true);
         const querySnapshot = await firebase.searchData(search);
         querySnapshot.forEach((doc) => {
@@ -66,7 +73,7 @@ const Home = () => {
             <div className="h-20 flex items-center w-full justify-between gap-4 mt-2 sm:mt-0 md:px-5 flex-wrap">
                 <div className="text-2xl sm:text-3xl font-bold md:pl-10">JobPth.</div>
                 <div className="flex gap-2">
-                    <Button type="button" variant="contained" onClick={() => console.log("New job post")}>Create Job</Button>
+                    <Button type="button" variant="contained" onClick={() => navigate("/create")}>Create Job</Button>
                     {user && user.email !== '' && <Button
                         type="button"
                         variant="outlined"
@@ -127,7 +134,7 @@ const Home = () => {
                 fetchData();
                 setIsFilter(false);
             }}>Clear Filters</Button></div>}
-            <div className="flex flex-wrap gap-4 mx-2 md:mx-4 justify-start overflow-x-scroll sm:justify-center sm:overflow-hidden">
+            <div className="flex flex-wrap gap-4 mx-2 md:mx-4 justify-start overflow-x-scroll sm:justify-center md:overflow-hidden">
                 {jobs && jobs.length > 0 ? jobs.map((job, i) => (
                     <Card job={job} key={i} />
                 )) : <div className="h-40 w-full flex justify-center items-center">No Jobs to display!</div>}

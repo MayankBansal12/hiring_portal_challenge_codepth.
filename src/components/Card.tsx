@@ -9,11 +9,10 @@ interface JobProps {
 }
 
 const JobCard = ({ job }: JobProps) => {
-    const currentTime = dayjs(Date.now());
-    const diff = currentTime.diff(job?.posted, 'day');
+    const diff = dayjs(Date.now()).diff(job?.posted, 'day');
 
     return (
-        <Card sx={{ minWidth: 350 }} className="p-2">
+        <Card sx={{ minWidth: 350 }} className="p-2 w-full sm:w-4/5">
             <CardContent>
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                     <span className="flex justify-between gap-2">
@@ -45,7 +44,7 @@ const JobCard = ({ job }: JobProps) => {
                     </span>
 
                 </Typography>
-                <div className='flex items-center gap-2'>
+                <div className="flex items-center gap-2 flex-wrap">
                     {job?.skills && job?.skills.length > 0 ? job?.skills?.map((skill, i) => (
                         <Chip key={i} variant="outlined" color="info" label={skill} />
                     )) : <div className="text-gray-500">No skills mentioned!</div>}
