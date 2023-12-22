@@ -9,6 +9,8 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from "./context/Firebase";
 import { useRecoilState } from 'recoil';
 import { userAtom } from './atoms/user.ts';
+import 'noty/lib/noty.css';
+import "noty/lib/themes/semanticui.css";
 
 const darkTheme = createTheme({
   palette: {

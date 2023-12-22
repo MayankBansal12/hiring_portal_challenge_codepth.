@@ -51,7 +51,7 @@ const JobCard = ({ job }: JobProps) => {
                 </div>
             </CardContent>
             <Link to={"/job/" + job.id} className="flex justify-end">
-                <Button size="small">Learn More</Button>
+                <Button size="small">View Details</Button>
             </Link>
         </Card >
     )

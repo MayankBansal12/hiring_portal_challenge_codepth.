@@ -1,13 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useRecoilState } from 'recoil'
 import { userAtom } from '../atoms/user'
+import { notify } from '../utils/notify';
+import { useNavigate } from 'react-router-dom';
 
 const JobPage = () => {
   const [user, setUser] = useRecoilState(userAtom);
+  const navigate = useNavigate();
 
-  if (!user) {
-    alert("Please login to view details");
-  }
+  useEffect(() => {
+    if (!user) {
+      notify("Login to view job details");
+      navigate("/auth");
+    }
+  }, [])
 
   return (
     <div>

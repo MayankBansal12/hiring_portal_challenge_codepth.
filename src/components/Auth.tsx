@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useFirebase } from "../context/Firebase";
 import { useRecoilState } from "recoil";
 import { userAtom } from "../atoms/user";
+import { notify } from "../utils/notify";
 
 const Auth = () => {
   const [user, setUser] = useRecoilState(userAtom);
@@ -15,8 +16,8 @@ const Auth = () => {
   const firebase = useFirebase();
 
   useEffect(() => {
-    if (user) {
-      navigate("/");
+    if (user !== null && user.email !== '') {
+      navigate("/")
     }
   }, [])
 
@@ -39,7 +40,7 @@ const Auth = () => {
         .then((userCredential) => {
           // Signed up 
           const user = userCredential.user;
-          alert("Successfully signed up!");
+          notify("Signup Successful!", "success");
           localStorage.setItem("uid", user?.uid);
           navigate("/");
         })
@@ -48,7 +49,7 @@ const Auth = () => {
           const errorCode = error.code;
           const errorMessage = error.message;
           console.log(errorCode, errorMessage);
-          alert(error.message);
+          notify(errorMessage + " , try again!", "error");
         });
     } else {
       // Handle login request
@@ -57,7 +58,7 @@ const Auth = () => {
           // Log in 
           const user = userCredential.user;
           localStorage.setItem("uid", user?.uid);
-          alert("Success");
+          notify("Successful Login!", "success");
           navigate("/");
         })
         .catch((error) => {
@@ -65,7 +66,7 @@ const Auth = () => {
           const errorCode = error.code;
           const errorMessage = error.message;
           console.log(errorCode, errorMessage);
-          alert("Wrong Email or Password, try again!");
+          notify("Wrong Email or Password, try again!", "error");
         });
     }
   }
