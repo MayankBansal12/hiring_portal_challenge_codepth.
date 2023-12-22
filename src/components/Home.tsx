@@ -2,8 +2,15 @@ import React, { useState } from "react"
 import { Button } from "@mui/material"
 import Card from "./Card"
 import { JobType } from "../types/types"
+import { useFirebase } from "../context/Firebase";
+import { notify } from "../utils/notify";
+import { useRecoilState } from "recoil";
+import { userAtom } from "../atoms/user";
 
 const Home = () => {
+    const [user, setUser] = useRecoilState(userAtom);
+    const firebase = useFirebase();
+
     const [search, setSearch] = useState({
         title: "",
         location: "",
@@ -23,6 +30,15 @@ const Home = () => {
         posted: new Date('2023-10-10')
     }
 
+    // Handle Logout 
+    const handleLogout = () => {
+        firebase.logout().then(() => {
+            notify("User logged out!");
+        }).catch((error) => {
+            console.log(error);
+            notify("Error, try again!");
+        });
+    }
     const handleChange = (e: React.FormEvent<HTMLElement>) => {
         const form = e.target as HTMLInputElement;
         setSearch((prev) => ({
@@ -37,8 +53,19 @@ const Home = () => {
 
     return (
         <div className="p-2">
-            <div className="h-20 flex items-center w-full justify-center sm:justify-start">
-                <div className="text-3xl sm:pl-10 font-bold">JobPth.</div>
+            <div className="h-20 flex items-center w-full justify-between gap-4 mt-2 sm:mt-0 md:px-5 flex-wrap">
+                <div className="text-2xl sm:text-3xl font-bold md:pl-10">JobPth.</div>
+                <div className="flex gap-2">
+                    <Button type="button" variant="contained" onClick={() => console.log("New job post")}>Create Job</Button>
+                    {user && user.email !== '' && <Button
+                        type="button"
+                        variant="outlined"
+                        color="primary"
+                        onClick={handleLogout}
+                    >
+                        Log Out
+                    </Button>}
+                </div>
             </div>
             <div className="mt-10 flex flex-col gap-5 items-center justify-center">
                 <h1 className="text-2xl font-bold text-center sm:text-start">Start by searching for your next job!</h1>

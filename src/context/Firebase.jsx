@@ -31,8 +31,13 @@ export const FirebaseProvider = (props) => {
         return signInWithEmailAndPassword(auth, email, password);
     }
 
+    // log out user
+    const logout = () => {
+        return signOut(auth);
+    }
+
     return (
-        <FirebaseContext.Provider value={{ signup, login }}>
+        <FirebaseContext.Provider value={{ signup, login, logout }}>
             {props.children}
         </FirebaseContext.Provider>
     )

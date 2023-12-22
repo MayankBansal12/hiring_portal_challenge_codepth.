@@ -8,7 +8,7 @@ import { notify } from "../utils/notify";
 
 const Auth = () => {
   const [user, setUser] = useRecoilState(userAtom);
-  const [newUser, setNewUser] = useState(true);
+  const [newUser, setNewUser] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
