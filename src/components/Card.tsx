@@ -16,7 +16,7 @@ const JobCard = ({ job }: JobProps) => {
         <Card sx={{ minWidth: 350 }} className="p-2">
             <CardContent>
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                    <div className="flex justify-between gap-2">
+                    <span className="flex justify-between gap-2">
                         <span className="flex gap-2">
                             <span>
                                 {job.type}
@@ -28,7 +28,7 @@ const JobCard = ({ job }: JobProps) => {
                         <span>
                             Posted {diff >= 1 ? `${diff} days ago` : `Today`}
                         </span>
-                    </div>
+                    </span>
                 </Typography>
                 <Typography variant="h5" component="div" className="py-1">
                     {job.title}

@@ -1,5 +1,5 @@
-import { Button } from "@mui/material"
 import React, { useState } from "react"
+import { Button } from "@mui/material"
 import Card from "./Card"
 import { JobType } from "../types/types"
 
@@ -37,14 +37,14 @@ const Home = () => {
 
     return (
         <div className="p-2">
-            <div className="h-20 flex items-center w-full">
-                <div className="text-3xl pl-20 font-bold">JobPth.</div>
+            <div className="h-20 flex items-center w-full justify-center sm:justify-start">
+                <div className="text-3xl sm:pl-10 font-bold">JobPth.</div>
             </div>
             <div className="mt-10 flex flex-col gap-5 items-center justify-center">
-                <h1 className="text-2xl font-bold">Start by searching for your next job!</h1>
+                <h1 className="text-2xl font-bold text-center sm:text-start">Start by searching for your next job!</h1>
             </div>
             <div className="flex gap-4 my-10 justify-center px-10 flex-wrap">
-                <select onChange={handleChange} name="title" title="title" value={search.title} className="w-64 py-3 pl-4 bg-black font-semibold rounded-md">
+                <select onChange={handleChange} name="title" title="title" value={search.title} className="w-64 py-3 pl-4 bg-[#121212] font-semibold rounded-md">
                     <option value="" disabled hidden>Job Role</option>
                     <option value="Frontend Developer">Frontend Developer</option>
                     <option value="Backend Developer">Backend Developer</option>
@@ -52,19 +52,19 @@ const Home = () => {
                     <option value="DevOps Engineer">DevOps Engineer</option>
                     <option value="Mobile Developer">Mobile Developer</option>
                 </select>
-                <select onChange={handleChange} name="type" title="type" value={search.type} className="w-64 py-3 pl-4 bg-black font-semibold rounded-md">
+                <select onChange={handleChange} name="type" title="type" value={search.type} className="w-64 py-3 pl-4 bg-[#121212] font-semibold rounded-md">
                     <option value="" disabled hidden>Job Type</option>
                     <option value="Full Time">Full Time</option>
                     <option value="Intern">Intern</option>
                     <option value="Contract">Contract</option>
                 </select>
-                <select onChange={handleChange} name="location" title="location" value={search.location} className="w-64 py-3 pl-4 bg-black font-semibold rounded-md">
+                <select onChange={handleChange} name="location" title="location" value={search.location} className="w-64 py-3 pl-4 bg-[#121212] font-semibold rounded-md">
                     <option value="" disabled hidden>Location</option>
                     <option value="Remote">Remote</option>
                     <option value="In-Office">In-Office</option>
                     <option value="Hybrid">Hybrid</option>
                 </select>
-                <select onChange={handleChange} name="experience" title="experience" value={search.experience} className="w-64 py-3 pl-4 bg-black font-semibold rounded-md">
+                <select onChange={handleChange} name="experience" title="experience" value={search.experience} className="w-64 py-3 pl-4 bg-[#121212] font-semibold rounded-md">
                     <option value="" disabled hidden>Experience</option>
                     <option value="Fresher">Fresher</option>
                     <option value="Junior Level">Junior Level</option>
@@ -72,7 +72,7 @@ const Home = () => {
                 </select>
                 <Button
                     type="submit"
-                    variant="contained"
+                    variant="outlined"
                     color="primary"
                     className="px-4 py-2"
                     onClick={handleSubmit}
