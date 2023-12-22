@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Auth from "./components/Auth.tsx";
 import Home from "./components/Home.tsx";
 import JobPage from './components/JobPage.tsx';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from "./context/Firebase";
+import { useRecoilState } from 'recoil';
+import { userAtom } from './atoms/user.ts';
 
 const darkTheme = createTheme({
   palette: {
@@ -13,6 +17,19 @@ const darkTheme = createTheme({
 });
 
 export default function App() {
+  const [user, setUser] = useRecoilState(userAtom);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser({
+          email: user.email
+        })
+      } else
+        setUser(null);
+    })
+  }, [])
+
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />

@@ -1,42 +1,73 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextField, Button } from "@mui/material";
-import { loginParams, signupParams } from "../types/types.ts";
+import { useNavigate } from "react-router-dom";
+import { useFirebase } from "../context/Firebase";
+import { useRecoilState } from "recoil";
+import { userAtom } from "../atoms/user";
 
 const Auth = () => {
+  const [user, setUser] = useRecoilState(userAtom);
   const [newUser, setNewUser] = useState(true);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const firebase = useFirebase();
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [])
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // If new user, it must be org signup
     if (newUser) {
-      handleAuth("signup", "/signup");
+      handleAuth("signup");
     } else {
-      handleAuth("login", "/login");
+      handleAuth("login");
     }
   }
 
   // Function to handle signup, login for both org and user
-  const handleAuth = async (type: string, endpoint: string) => {
-    let input: signupParams | loginParams;
-
+  const handleAuth = async (type: string) => {
     // If type is signup then input will be diff
     if (type === "signup") {
-      input = {
-        email: email,
-        passwd: password,
-        name: name
-      }
+      // Signup for new user
+      firebase.signup(email, password)
+        .then((userCredential) => {
+          // Signed up 
+          const user = userCredential.user;
+          alert("Successfully signed up!");
+          localStorage.setItem("uid", user?.uid);
+          navigate("/");
+        })
+        .catch((error) => {
+          // error
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode, errorMessage);
+          alert(error.message);
+        });
     } else {
-      input = {
-        email: email,
-        passwd: password
-      }
+      // Handle login request
+      firebase.login(email, password)
+        .then((userCredential) => {
+          // Log in 
+          const user = userCredential.user;
+          localStorage.setItem("uid", user?.uid);
+          alert("Success");
+          navigate("/");
+        })
+        .catch((error) => {
+          // error
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode, errorMessage);
+          alert("Wrong Email or Password, try again!");
+        });
     }
-
-    console.log(input, endpoint);
   }
 
   return (

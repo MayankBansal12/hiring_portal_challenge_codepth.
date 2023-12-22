@@ -3,10 +3,9 @@ export type loginParams = {
     passwd: string
 }
 
-export type signupParams = {
-    name: string,
-    email: string,
-    passwd: string
+export interface IUser {
+    name?: string,
+    email: string
 }
 
 export type JobType = {
