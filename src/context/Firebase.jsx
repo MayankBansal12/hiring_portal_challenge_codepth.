@@ -1,5 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import { initializeApp } from "firebase/app";
+import { getFirestore, orderBy, collection, query, where, getDocs } from 'firebase/firestore';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 const FirebaseContext = createContext(null);
@@ -15,11 +16,28 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
+export const db = getFirestore(app);
+
 export const auth = getAuth(app);
 
 export const useFirebase = () => useContext(FirebaseContext);
 
 export const FirebaseProvider = (props) => {
+
+    // Fetch data from db
+    const getData = () => {
+        const ref = query(collection(db, "jobs"));
+        const q = query(ref, orderBy("posted", "desc"));
+        return getDocs(q);
+    }
+
+    // Make custom req based on query
+    const searchData = (search) => {
+        const ref = query(collection(db, "jobs"));
+        const q = query(ref, where("type", "==", search.type), where("title", "==", search.title), where("experience", "==", search.experience), where("location", "==", search.location), orderBy("posted", "desc"))
+        return getDocs(q);
+    }
 
     // For signup in case of new user
     const signup = (email, password) => {
@@ -37,7 +55,7 @@ export const FirebaseProvider = (props) => {
     }
 
     return (
-        <FirebaseContext.Provider value={{ signup, login, logout }}>
+        <FirebaseContext.Provider value={{ signup, login, logout, getData, searchData }}>
             {props.children}
         </FirebaseContext.Provider>
     )

@@ -1,7 +1,7 @@
-import React, { useState } from "react"
-import { Button } from "@mui/material"
-import Card from "./Card"
-import { JobType } from "../types/types"
+import React, { useEffect, useState } from "react";
+import { Button } from "@mui/material";
+import Card from "./Card";
+import { JobType } from "../types/types";
 import { useFirebase } from "../context/Firebase";
 import { notify } from "../utils/notify";
 import { useRecoilState } from "recoil";
@@ -9,26 +9,29 @@ import { userAtom } from "../atoms/user";
 
 const Home = () => {
     const [user, setUser] = useRecoilState(userAtom);
+    const [jobs, setJobs] = useState<JobType[]>(null);
     const firebase = useFirebase();
+    const [isFilter, setIsFilter] = useState(false);
 
     const [search, setSearch] = useState({
         title: "",
         location: "",
         experience: "",
         type: ""
-    })
+    });
 
-    const jobDetails: JobType = {
-        id: "id",
-        title: "Job Title",
-        company: "Company",
-        desc: "Job Description",
-        type: "Full Time",
-        experience: "Senior Level",
-        location: "Remote",
-        skills: ["Skill1", "Skill2", "Skill3"],
-        posted: new Date('2023-10-10')
+    let tempData = [];
+    const fetchData = async () => {
+        const querySnapshot = await firebase.getData();
+        querySnapshot.forEach((doc) => {
+            tempData.push({ ...doc.data(), id: doc.id, posted: doc.data().posted.toDate() });
+        });
+        setJobs(tempData);
     }
+
+    useEffect(() => {
+        fetchData();
+    }, [])
 
     // Handle Logout 
     const handleLogout = () => {
@@ -47,8 +50,15 @@ const Home = () => {
         }));
     }
 
-    const handleSubmit = () => {
-        console.log(search);
+    const handleSubmit = async () => {
+        tempData = [];
+        setIsFilter(true);
+        const querySnapshot = await firebase.searchData(search);
+        querySnapshot.forEach((doc) => {
+            console.log(doc.data());
+            tempData.push({ ...doc.data(), id: doc.id, posted: doc.data().posted.toDate() });
+        });
+        setJobs(tempData);
     }
 
     return (
@@ -107,16 +117,20 @@ const Home = () => {
                     Search
                 </Button>
             </div>
+            {isFilter && <div className="text-right m-4"><Button type="button" variant="contained" onClick={() => {
+                setSearch({
+                    title: "",
+                    location: "",
+                    experience: "",
+                    type: ""
+                });
+                fetchData();
+                setIsFilter(false);
+            }}>Clear Filters</Button></div>}
             <div className="flex flex-wrap gap-4 mx-2 md:mx-4 justify-start overflow-x-scroll sm:justify-center sm:overflow-hidden">
-                <Card job={jobDetails} />
-                <Card job={jobDetails} />
-                <Card job={jobDetails} />
-                <Card job={jobDetails} />
-                <Card job={jobDetails} />
-                <Card job={jobDetails} />
-                <Card job={jobDetails} />
-                <Card job={jobDetails} />
-                <Card job={jobDetails} />
+                {jobs && jobs.length > 0 ? jobs.map((job, i) => (
+                    <Card job={job} key={i} />
+                )) : <div className="h-40 w-full flex justify-center items-center">No Jobs to display!</div>}
             </div>
         </div>
     )

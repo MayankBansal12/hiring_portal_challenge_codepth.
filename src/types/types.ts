@@ -9,13 +9,13 @@ export interface IUser {
 }
 
 export type JobType = {
-    id: string,
+    id?: string,
     title: string,
     company: string,
-    desc: string,
+    desc?: string,
     type: string,
     experience: string,
     location: string,
-    skills: string[]
+    skills?: string[]
     posted: Date,
 }

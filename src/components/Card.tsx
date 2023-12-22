@@ -10,7 +10,7 @@ interface JobProps {
 
 const JobCard = ({ job }: JobProps) => {
     const currentTime = dayjs(Date.now());
-    const diff = currentTime.diff(job.posted, 'day');
+    const diff = currentTime.diff(job?.posted, 'day');
 
     return (
         <Card sx={{ minWidth: 350 }} className="p-2">
@@ -19,10 +19,10 @@ const JobCard = ({ job }: JobProps) => {
                     <span className="flex justify-between gap-2">
                         <span className="flex gap-2">
                             <span>
-                                {job.type}
+                                {job?.type}
                             </span>
                             <span>
-                                {job.location}
+                                {job?.location}
                             </span>
                         </span>
                         <span>
@@ -36,21 +36,22 @@ const JobCard = ({ job }: JobProps) => {
                 <Typography variant="body1" sx={{ mb: 1.5 }} color="text.secondary">
                     <span className="flex gap-2 items-center">
                         <span className="text-lg">
-                            {job.company}
+                            {job?.company}
                         </span>
+                        <span>•</span>
                         <span>
-                            {job.experience}
+                            {job?.experience}
                         </span>
                     </span>
 
                 </Typography>
                 <div className='flex items-center gap-2'>
-                    {job.skills.map((skill, i) => (
+                    {job?.skills && job?.skills.length > 0 ? job?.skills?.map((skill, i) => (
                         <Chip key={i} variant="outlined" color="info" label={skill} />
-                    ))}
+                    )) : <div className="text-gray-500">No skills mentioned!</div>}
                 </div>
             </CardContent>
-            <Link to={"/job/" + job.id} className="flex justify-end">
+            <Link to={"/job/" + job?.id} className="flex justify-end">
                 <Button size="small">View Details</Button>
             </Link>
         </Card >
