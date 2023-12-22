@@ -4,6 +4,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Auth from "./components/Auth.tsx";
 import Home from "./components/Home.tsx";
+import JobPage from './components/JobPage.tsx';
 
 const darkTheme = createTheme({
   palette: {
@@ -17,8 +18,9 @@ export default function App() {
       <CssBaseline />
       <BrowserRouter>
         <Routes>
-          <Route path="/auth" Component={Auth} />
           <Route path="/" Component={Home} />
+          <Route path="/auth" Component={Auth} />
+          <Route path="/job/:id" Component={JobPage} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
