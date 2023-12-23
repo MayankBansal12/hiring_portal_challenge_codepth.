@@ -1,91 +1,59 @@
-import { Button, TextField } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useFirebase } from "../context/Firebase";
-import { notify } from '../utils/notify';
-import { useNavigate } from 'react-router-dom';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 const Response = ({ docId }) => {
+    const [responses, setResponses] = useState([]);
     const firebase = useFirebase();
-    const navigate = useNavigate();
-    const [details, setDetails] = useState({
-        name: '',
-        email: '',
-        phone: '',
-        desc: '',
-        resume: ''
-    })
 
-    const handleChange = (e: React.FormEvent<HTMLElement>) => {
-        const form = e.target as HTMLInputElement;
-        setDetails(prev => ({ ...prev, [form.name]: form.value }));
+    const fetchResponses = async () => {
+        let temp = [];
+        const querySnapshot = await firebase.viewResponse(docId);
+        querySnapshot.forEach((doc) => {
+            temp.push({ ...doc.data(), id: doc.id })
+        });
+        setResponses(temp);
     }
 
-    const onSubmit = async (e: React.FormEvent<HTMLElement>) => {
-        e.preventDefault();
-        firebase.addResponse(docId, details).then(() => {
-            notify("Applied Successfully!", "success");
-            navigate("/");
-        }).catch(err => {
-            console.log(err);
-            notify("Error, try again!", "error")
-        })
-    }
+    useEffect(() => {
+        fetchResponses();
+    }, [])
 
     return (
-        <form className="w-4/5 md:w-1/2 flex flex-col gap-5 my-8" onSubmit={onSubmit}>
-            <TextField
-                label="Enter your Full Name"
-                name="name"
-                variant="outlined"
-                value={details.name}
-                required={true}
-                onChange={handleChange}
-            />
-            <TextField
-                label="Your Email"
-                type="email"
-                name="email"
-                variant="outlined"
-                value={details.email}
-                required={true}
-                onChange={handleChange}
-            />
-            <TextField
-                label="Contact No"
-                name="phone"
-                variant="outlined"
-                value={details.phone}
-                required={true}
-                onChange={handleChange}
-            />
-            <TextField
-                label="Resume Link"
-                name="resume"
-                type="link"
-                variant="outlined"
-                value={details.resume}
-                required={true}
-                onChange={handleChange}
-            />
-            <TextField
-                label="Anything about you that we should know!"
-                name="desc"
-                type="link"
-                variant="outlined"
-                value={details.desc}
-                onChange={handleChange}
-            />
-            <div className="flex justify-center">
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                >
-                    Submit Response
-                </Button>
-            </div>
-        </form>
+        <>
+            {responses && responses.length > 0 ? <div>
+                <TableContainer component={Paper} className="w-full">
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell align="center">Name</TableCell>
+                                <TableCell align="center">Email</TableCell>
+                                <TableCell align="center">Phone No</TableCell>
+                                <TableCell align="center">Description</TableCell>
+                                <TableCell align="center">Resume Link</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {responses.map((row, i) => (
+                                <TableRow
+                                    key={i}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                    <TableCell component="th" scope="row" align="center">
+                                        {row.name}
+                                    </TableCell>
+                                    <TableCell align="center">{row.email}</TableCell>
+                                    <TableCell align="center">{row.phone}</TableCell>
+                                    <TableCell align="center">{row.desc}</TableCell>
+                                    <TableCell align="center">{row.resume}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </div> : <>No Responses yet!</>}
+        </>
     )
 }
 
-export default Response;
+export default Response

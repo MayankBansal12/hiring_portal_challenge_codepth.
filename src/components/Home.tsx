@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "@mui/material";
+import { Button, Skeleton } from "@mui/material";
 import Card from "./Card";
 import { JobType } from "../types/types";
 import { useFirebase } from "../context/Firebase";
@@ -46,7 +46,7 @@ const Home = () => {
             notify("Error, try again!");
         });
     }
-    
+
     // Handle change in search query
     const handleChange = (e: React.FormEvent<HTMLElement>) => {
         const form = e.target as HTMLInputElement;
@@ -135,9 +135,15 @@ const Home = () => {
                 setIsFilter(false);
             }}>Clear Filters</Button></div>}
             <div className="flex flex-wrap gap-4 mx-2 md:mx-4 justify-start overflow-x-scroll sm:justify-center md:overflow-hidden">
-                {jobs && jobs.length > 0 ? jobs.map((job, i) => (
+                {jobs ? jobs.length > 0 ? jobs.map((job, i) => (
                     <Card job={job} key={i} />
-                )) : <div className="h-40 w-full flex justify-center items-center">No Jobs to display!</div>}
+                )) : (<div className="h-40 w-full flex justify-center items-center">No Jobs to display!</div>)
+                    : <>
+                        <Skeleton variant="rectangular" height={200} width={'75vw'} className="mb-2" />
+                        <Skeleton variant="rectangular" height={200} width={'75vw'} className="mb-2" />
+                        <Skeleton variant="rectangular" height={200} width={'75vw'} className="mb-2" />
+                    </>
+                }
             </div>
         </div>
     )

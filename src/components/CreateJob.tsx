@@ -6,6 +6,8 @@ import { notify } from '../utils/notify';
 import { TextField, Button, FormControl, Select, InputLabel, MenuItem, SelectChangeEvent, OutlinedInput, Box, Chip } from "@mui/material";
 import { JobType } from '../types/types';
 import { useFirebase } from "../context/Firebase";
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from "../context/firebase";
 
 // Skill Names for Selecting skills
 const skillNames = [
@@ -41,21 +43,35 @@ const CreateJob = () => {
         experience: "",
         location: "",
         skills: [],
+        recruiter: "",
         posted: new Date()
     });
 
     // Check if user is logged in
     useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUser({
+                    email: user.email
+                })
+            } else {
+                setUser(null);
+            }
+        })
+    }, [])
+
+    useEffect(() => {
         if (!user) {
             notify("Login to create a new job");
             navigate("/auth");
         }
-    }, [])
+    }, [user]);
 
     // Posting a new job
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         job.skills = skills;
+        job.recruiter = user.email;
         firebase.writeData(job).then(() => {
             notify("New Post Created!", "success");
             navigate("/");

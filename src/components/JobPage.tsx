@@ -6,6 +6,9 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useFirebase } from "../context/Firebase";
 import { Button, Chip, Skeleton, Stack } from '@mui/material';
 import { Timestamp } from 'firebase/firestore';
+import CreateResponse from './CreateResponse';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from "../context/Firebase";
 import Response from './Response';
 
 const JobPage = () => {
@@ -15,6 +18,7 @@ const JobPage = () => {
   const { id } = useParams();
   const firebase = useFirebase();
   const [apply, setApply] = useState(false);
+  const [showResponse, setShowResponse] = useState(false);
 
   // Fetch Data using id
   const fetchData = async () => {
@@ -46,13 +50,24 @@ const JobPage = () => {
 
   // In case user is logged in, redirect to auth
   useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser({
+          email: user.email
+        })
+        fetchData();
+      } else {
+        setUser(null);
+      }
+    })
+  }, [])
+
+  useEffect(() => {
     if (!user) {
       notify("Login to view job details");
       navigate("/auth");
-    } else {
-      fetchData();
     }
-  }, [])
+  }, [user])
 
   return (
     <div className="flex flex-col h-screen px-2">
@@ -95,15 +110,19 @@ const JobPage = () => {
                 }
               </div>
             </div>
-            <div className="my-2">
-              {apply ? <Button variant="outlined" type="button" size="small" className="text-center" onClick={() => setApply(false)}>Close</Button>
-                : <Button variant="contained" type="button" onClick={() => setApply(true)}>Apply</Button>}
-              {/* <Button variant="outlined" type="button">View Responses</Button> */}
-            </div>
+            {job.recruiter === user.email && <div>
+              {!showResponse ? <Button variant="outlined" type="button" onClick={() => setShowResponse(true)}>View Responses</Button> : <Button variant="contained" type="button" onClick={() => setShowResponse(false)}>Hide Responses</Button>}
+            </div>}
+            {job.recruiter !== user.email &&
+              <div className="my-2">
+                {apply ? <Button variant="outlined" type="button" size="small" className="text-center" onClick={() => setApply(false)}>Close</Button>
+                  : <Button variant="contained" type="button" onClick={() => setApply(true)}>Apply</Button>}
+              </div>}
             {apply && <div className="flex flex-col justify-center items-center">
               <h3>Fill up the form carefully!</h3>
-              <Response docId={id} />
+              <CreateResponse docId={id} />
             </div>}
+            {showResponse && <Response docId={id} />}
           </div>
         ) : (
           <div className="w-[90vw]">
@@ -114,7 +133,7 @@ const JobPage = () => {
           </div>
         )}
       </div>
-    </div>
+    </div >
   )
 }
 

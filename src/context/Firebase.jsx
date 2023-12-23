@@ -49,6 +49,10 @@ export const FirebaseProvider = (props) => {
         return addDoc(ref, data);
     }
 
+    const viewResponse = (docId) => {
+        const docRef = query(collection(db, "jobs", docId, "responses"))
+        return getDocs(docRef);
+    }
     // Make custom req based on query
     const searchData = (search) => {
         const ref = query(collection(db, "jobs"));
@@ -72,7 +76,7 @@ export const FirebaseProvider = (props) => {
     }
 
     return (
-        <FirebaseContext.Provider value={{ signup, login, logout, getData, searchData, writeData, fetchDetail, addResponse }}>
+        <FirebaseContext.Provider value={{ signup, login, logout, getData, searchData, writeData, fetchDetail, addResponse, viewResponse }}>
             {props.children}
         </FirebaseContext.Provider>
     )

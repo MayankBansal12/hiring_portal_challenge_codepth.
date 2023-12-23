@@ -16,6 +16,7 @@ export type JobType = {
     type: string,
     experience: string,
     location: string,
-    skills?: string[]
+    skills?: string[],
+    recruiter: string,
     posted: Date,
 }
