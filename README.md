@@ -48,6 +48,7 @@ Note:- Might have to setup a new firebase project and then connect to the projec
 
 - **Job Details Display:**
   - Dedicated pages to display comprehensive job details, including the job link.
+  - Filter-based searching available to accomodate specific user's requirement. 
   - Exclusive access granted to logged-in users for viewing job details.
   - Easy apply by filling a form for each job application.
 
@@ -70,17 +71,31 @@ Note:- Push Notifications might not work if notifications are not allowed by the
 
 ## Demo
 Access the website live:- [https://jobpth.vercel.app/](https://jobpth.vercel.app/)
+
 ![Site_Demo](https://res.cloudinary.com/dwuyp1nss/image/upload/v1703351466/Home_x7ilqv.png)
 
+### Test Login Credentials
+Email:- user@gmail.com
+Password:- password
+
 ## Screenshots
+
 ![Login](https://res.cloudinary.com/dwuyp1nss/image/upload/v1703351463/Auth_vktzds.png)
+
 ![signup](https://res.cloudinary.com/dwuyp1nss/image/upload/v1703351462/Auth_Signup_hgi8sw.png)
+
 ![Home Page](https://res.cloudinary.com/dwuyp1nss/image/upload/v1703351464/Home_Page_nstfe1.png)
+
 ![Filter based search](https://res.cloudinary.com/dwuyp1nss/image/upload/v1703351463/Filter_onk88s.png)
+
 ![Create Job](https://res.cloudinary.com/dwuyp1nss/image/upload/v1703351471/New_job_fwqifm.png)
+
 ![Job Page](https://res.cloudinary.com/dwuyp1nss/image/upload/v1703351468/Job_page_l71uuz.png)
+
 ![Responses](https://res.cloudinary.com/dwuyp1nss/image/upload/v1703351474/Responses2_bbwdmz.png)
+
 ![Responses 2](https://res.cloudinary.com/dwuyp1nss/image/upload/v1703351474/Responses_pztazf.png)
+
 ![Apply](https://res.cloudinary.com/dwuyp1nss/image/upload/v1703351462/Apply_puotut.png)
 
 
