@@ -5,9 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { notify } from '../utils/notify';
 import { TextField, Button, FormControl, Select, InputLabel, MenuItem, SelectChangeEvent, OutlinedInput, Box, Chip } from "@mui/material";
 import { JobType } from '../types/types';
-import { useFirebase } from "../context/Firebase";
+import { auth, useFirebase } from "../context/Firebase.jsx";
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from "../context/firebase";
 
 // Skill Names for Selecting skills
 const skillNames = [

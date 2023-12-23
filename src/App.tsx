@@ -7,7 +7,7 @@ import Home from "./components/Home.tsx";
 import JobPage from './components/JobPage.tsx';
 import CreateJob from './components/CreateJob.tsx';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from "./context/Firebase";
+import { auth } from "./context/Firebase.jsx";
 import { useRecoilState } from 'recoil';
 import { userAtom } from './atoms/user.ts';
 import 'noty/lib/noty.css';

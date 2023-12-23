@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useFirebase } from "../context/Firebase";
+import { useFirebase } from "../context/Firebase.jsx";
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 const Response = ({ docId }) => {

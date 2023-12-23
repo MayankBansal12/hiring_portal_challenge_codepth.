@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Skeleton } from "@mui/material";
 import Card from "./Card";
 import { JobType } from "../types/types";
-import { useFirebase } from "../context/Firebase";
+import { useFirebase } from "../context/Firebase.jsx";
 import { notify } from "../utils/notify";
 import { useRecoilState } from "recoil";
 import { userAtom } from "../atoms/user";

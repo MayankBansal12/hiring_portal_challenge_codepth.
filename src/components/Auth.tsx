@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { TextField, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useFirebase } from "../context/Firebase";
+import { useFirebase } from "../context/Firebase.jsx";
 import { useRecoilState } from "recoil";
 import { userAtom } from "../atoms/user";
 import { notify } from "../utils/notify";

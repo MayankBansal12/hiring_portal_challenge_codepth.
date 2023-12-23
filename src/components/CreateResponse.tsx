@@ -1,6 +1,6 @@
 import { Button, TextField } from '@mui/material'
 import React, { useState } from 'react'
-import { useFirebase } from "../context/Firebase";
+import { useFirebase } from "../context/Firebase.jsx";
 import { notify } from '../utils/notify';
 import { useNavigate } from 'react-router-dom';
 

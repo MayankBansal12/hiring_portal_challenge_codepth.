@@ -3,12 +3,11 @@ import { useRecoilState } from 'recoil'
 import { userAtom } from '../atoms/user'
 import { notify } from '../utils/notify';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useFirebase } from "../context/Firebase";
+import { auth, useFirebase } from "../context/Firebase.jsx";
 import { Button, Chip, Skeleton, Stack } from '@mui/material';
 import { Timestamp } from 'firebase/firestore';
 import CreateResponse from './CreateResponse';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from "../context/Firebase";
 import Response from './Response';
 
 const JobPage = () => {
