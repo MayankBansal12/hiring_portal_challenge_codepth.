@@ -42,7 +42,6 @@ const JobCard = ({ job }: JobProps) => {
                             {job?.experience}
                         </span>
                     </span>
-
                 </Typography>
                 <div className="flex items-center gap-2 flex-wrap">
                     {job?.skills && job?.skills.length > 0 ? job?.skills?.map((skill, i) => (

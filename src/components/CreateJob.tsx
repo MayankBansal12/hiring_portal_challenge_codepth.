@@ -3,7 +3,7 @@ import { useRecoilState } from 'recoil';
 import { userAtom } from '../atoms/user';
 import { Link, useNavigate } from 'react-router-dom';
 import { notify } from '../utils/notify';
-import { TextField, Button, FormControl, Select, FormLabel, InputLabel, MenuItem, SelectChangeEvent, OutlinedInput, Box, Chip } from "@mui/material";
+import { TextField, Button, FormControl, Select, InputLabel, MenuItem, SelectChangeEvent, OutlinedInput, Box, Chip } from "@mui/material";
 import { JobType } from '../types/types';
 import { useFirebase } from "../context/Firebase";
 
@@ -53,15 +53,15 @@ const CreateJob = () => {
     }, [])
 
     // Posting a new job
-    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         job.skills = skills;
-        firebase.writeData(job).then(()=>{
-            notify("New Post Created!","success");
+        firebase.writeData(job).then(() => {
+            notify("New Post Created!", "success");
             navigate("/");
-        }).catch((error)=>{
+        }).catch((error) => {
             console.log(error);
-            notify("Error, try again!","error");
+            notify("Error, try again!", "error");
         });
     }
 

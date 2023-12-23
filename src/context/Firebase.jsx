@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import { initializeApp } from "firebase/app";
-import { getFirestore, orderBy, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { getFirestore, orderBy, collection, query, where, getDocs, addDoc, getDoc, doc } from 'firebase/firestore';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 const FirebaseContext = createContext(null);
 
@@ -24,15 +24,28 @@ export const useFirebase = () => useContext(FirebaseContext);
 
 export const FirebaseProvider = (props) => {
 
-    // Fetch data from db
+    // Fetch all docs from db
     const getData = () => {
         const ref = query(collection(db, "jobs"));
         const q = query(ref, orderBy("posted", "desc"));
         return getDocs(q);
     }
 
+    // Fetch specific post with a id
+    const fetchDetail = (id) => {
+        const docRef = doc(db, "jobs", id);
+        return getDoc(docRef);
+    }
+
+    // Post a new job
     const writeData = (data) => {
         const ref = query(collection(db, "jobs"));
+        return addDoc(ref, data);
+    }
+
+    // For adding responses to the job application
+    const addResponse = (docId, data) => {
+        const ref = query(collection(db, `jobs/${docId}/responses`))
         return addDoc(ref, data);
     }
 
@@ -59,7 +72,7 @@ export const FirebaseProvider = (props) => {
     }
 
     return (
-        <FirebaseContext.Provider value={{ signup, login, logout, getData, searchData, writeData }}>
+        <FirebaseContext.Provider value={{ signup, login, logout, getData, searchData, writeData, fetchDetail, addResponse }}>
             {props.children}
         </FirebaseContext.Provider>
     )
