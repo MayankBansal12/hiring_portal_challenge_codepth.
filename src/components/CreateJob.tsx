@@ -5,8 +5,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { notify } from '../utils/notify';
 import { TextField, Button, FormControl, Select, InputLabel, MenuItem, SelectChangeEvent, OutlinedInput, Box, Chip } from "@mui/material";
 import { JobType } from '../types/types';
-import { auth, useFirebase } from "../context/Firebase.jsx";
+import { auth, useFirebase, messaging } from "../context/Firebase.jsx";
 import { onAuthStateChanged } from 'firebase/auth';
+import { getToken } from 'firebase/messaging';
+const path = "../../firebase-messaging-sw.js";
 
 // Skill Names for Selecting skills
 const skillNames = [
@@ -43,8 +45,43 @@ const CreateJob = () => {
         location: "",
         skills: [],
         recruiter: "",
-        posted: new Date()
+        posted: new Date(),
+        token: ""
     });
+
+    const requestPermission = async () => {
+        const permission = await Notification.requestPermission()
+        if (permission === "granted") {
+            const token = await getToken(messaging, { vapidKey: import.meta.env.VITE_VAPID });
+            job.token = token;
+        } else if (permission === "denied") {
+            alert("Please allow notifications to get notify in case of new applications!");
+        }
+    }
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(path)
+            .then(function (registration) {
+                console.log('Registration successful, scope is:', registration.scope);
+                getToken(messaging, {
+                    vapidKey: import.meta.env.VITE_VAPID
+                })
+                    .then((currentToken) => {
+                        if (currentToken) {
+                            // Set the token
+                            job.token = currentToken;
+                        } else {
+                            // No token available
+                            requestPermission();
+                        }
+                    }).catch((err) => {
+                        console.log('An error occurred while retrieving token. ', err);
+                    });
+            }).catch(function (err) {
+                console.log('Service worker registration failed, error:', err);
+            });
+    }
+
 
     // Check if user is logged in
     useEffect(() => {

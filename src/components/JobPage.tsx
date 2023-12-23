@@ -119,7 +119,7 @@ const JobPage = () => {
               </div>}
             {apply && <div className="flex flex-col justify-center items-center">
               <h3>Fill up the form carefully!</h3>
-              <CreateResponse docId={id} />
+              <CreateResponse docId={id} token={job.token} />
             </div>}
             {showResponse && <Response docId={id} />}
           </div>

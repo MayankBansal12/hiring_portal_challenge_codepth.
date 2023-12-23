@@ -2,6 +2,7 @@ import React, { createContext, useContext } from 'react';
 import { initializeApp } from "firebase/app";
 import { getFirestore, orderBy, collection, query, where, getDocs, addDoc, getDoc, doc } from 'firebase/firestore';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { getMessaging } from "firebase/messaging";
 const FirebaseContext = createContext(null);
 
 const firebaseConfig = {
@@ -17,6 +18,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app);
+
+export const messaging = getMessaging(app);
 
 export const auth = getAuth(app);
 
@@ -75,8 +78,29 @@ export const FirebaseProvider = (props) => {
         return signOut(auth);
     }
 
+    // Send push notification
+    const notification = async (token) => {
+        const response = await fetch('https://fcm.googleapis.com/fcm/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `key=${import.meta.env.VITE_SERVERKEY}`,
+            },
+            body: JSON.stringify({
+                to: token,
+                notification: {
+                    title: "New Application received!",
+                    body: "You have received a new response on your application",
+                },
+            }),
+        });
+
+        const data = await response.json();
+        console.log('Notification sent:', data);
+    }
+
     return (
-        <FirebaseContext.Provider value={{ signup, login, logout, getData, searchData, writeData, fetchDetail, addResponse, viewResponse }}>
+        <FirebaseContext.Provider value={{ signup, login, logout, getData, searchData, writeData, fetchDetail, addResponse, viewResponse, notification }}>
             {props.children}
         </FirebaseContext.Provider>
     )

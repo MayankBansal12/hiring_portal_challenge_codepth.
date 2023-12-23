@@ -19,4 +19,5 @@ export type JobType = {
     skills?: string[],
     recruiter: string,
     posted: Date,
+    token: string
 }

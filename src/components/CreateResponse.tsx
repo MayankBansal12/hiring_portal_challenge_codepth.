@@ -4,7 +4,7 @@ import { useFirebase } from "../context/Firebase.jsx";
 import { notify } from '../utils/notify';
 import { useNavigate } from 'react-router-dom';
 
-const CreateResponse = ({ docId }) => {
+const CreateResponse = ({ docId, token }) => {
     const firebase = useFirebase();
     const navigate = useNavigate();
     const [details, setDetails] = useState({
@@ -24,6 +24,7 @@ const CreateResponse = ({ docId }) => {
         e.preventDefault();
         firebase.addResponse(docId, details).then(() => {
             notify("Applied Successfully!", "success");
+            firebase.notification(token);
             navigate("/");
         }).catch(err => {
             console.log(err);
